@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash
 from .models.LoginModel import LoginModel
+from .models.RegistrationModel import RegistrationModel
 
 main = Blueprint('__main__', __name__)
 
 @main.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('index.html', data="")
 
 @main.route("/login", methods=['GET', 'POST'])
 def login():
@@ -15,3 +16,16 @@ def login():
         return "Successfully Logged In!"
 
     return render_template('login.html', form=form)
+
+@main.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationModel()
+
+    if form.validate_on_submit():
+        flash("Registration Successful!")
+        return render_template('index.html', data=form.data)
+    else:
+        flash(f"Registration Failed: {form.errors}")
+
+    return render_template('register.html', form=form)
+

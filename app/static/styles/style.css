@@ -4,3 +4,18 @@
     box-sizing: border-box;
     font-family: sans-serif;
 }
+
+
+.flashes {
+    border-radius: 10px;
+    background-color: #1d4b88;
+    color: #fef772;
+    padding: 10px;
+    margin: 10px;
+    width: 90%;
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 28px;
+}
