@@ -25,7 +25,9 @@ def register():
         flash("Registration Successful!")
         return render_template('index.html', data=form.data)
     else:
-        flash(f"Registration Failed: {form.errors}")
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"Registration Failed: {error}")
 
     return render_template('register.html', form=form)
 

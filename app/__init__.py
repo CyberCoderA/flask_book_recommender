@@ -10,6 +10,8 @@ def create_app():
     app.config.from_object(DevelopmentConfig)
     db.init_app(app)
 
+    
+
     app.register_blueprint(main)
 
     with app.app_context():
