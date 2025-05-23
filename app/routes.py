@@ -23,7 +23,7 @@ def register():
     form = RegistrationModel()
 
     if form.validate_on_submit():
-        flash(f"{form.data['preffered_genres']}")
+        flash(f"Books in {form.data['preffered_genres']} genre: {process_recommendation(str(form.data['preffered_genres']))}")
         return render_template('index.html', data=form.data)
     else:
         for field, errors in form.errors.items():
@@ -33,6 +33,7 @@ def register():
     return render_template('register.html', form=form)
 
 def process_recommendation(preffered_genre):
+    preffered_genre = preffered_genre.translate({ord(c): None for c in "[]'"})
     data = {
         'Title': ['A Game of Thrones', 'Lucifer', 'Rain in España', 'Outlander', 'Replay'],
         'Genre': ['Fantasy', 'Fiction', 'Romance', 'Historical', 'Fiction']
