@@ -33,7 +33,7 @@ def register():
     return render_template('register.html', form=form)
 
 def process_recommendation(preffered_genre):
-    book_data = pd.read_excel(r'C:\Users\Adrian\Documents\Flask\flask_book_recommender\app\models\books.xlsx', sheet_name="book")
+    book_data = pd.read_excel(r'app\models\books.xlsx', sheet_name="book")
     df = pd.DataFrame(book_data)
     recommended_books = []
     num_rows = df.shape[0]
