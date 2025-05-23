@@ -16,14 +16,14 @@ def index():
 #     if form.validate_on_submit():
 #         return "Successfully Logged In!"
 
-    return render_template('login.html', form=form)
+    # return render_template('login.html', form=form)
 
 @main.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationModel()
 
     if form.validate_on_submit():
-        flash(f"Books in {form.data['preffered_genres']} genre: {process_recommendation(str(form.data['preffered_genres']))}")
+        flash(f"Books in {form.data['preffered_genres']}: {process_recommendation(form.data['preffered_genres'])}")
         return render_template('index.html', data=form.data)
     else:
         for field, errors in form.errors.items():
@@ -33,13 +33,15 @@ def register():
     return render_template('register.html', form=form)
 
 def process_recommendation(preffered_genre):
-    preffered_genre = preffered_genre.translate({ord(c): None for c in "[]'"})
+    recommended_books = ""
+
     data = {
         'Title': ['A Game of Thrones', 'Lucifer', 'Rain in España', 'Outlander', 'Replay'],
         'Genre': ['Fantasy', 'Fiction', 'Romance', 'Historical', 'Fiction']
     }
 
-    df = pd.DataFrame(data)
-    recommended_books = df[df['Genre'] == preffered_genre]['Title'].tolist()
+    for genre in preffered_genre:
+        df = pd.DataFrame(data)
+        recommended_books += str(df[df['Genre'] == genre]['Title'].tolist())
+    
     return recommended_books if recommended_books else ["No books found with selected genres!"]
-
