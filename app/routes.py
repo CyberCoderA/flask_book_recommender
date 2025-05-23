@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash
 from .models.LoginModel import LoginModel
 from .models.RegistrationModel import RegistrationModel
+import pandas as pd
 
 main = Blueprint('__main__', __name__)
 
@@ -8,12 +9,12 @@ main = Blueprint('__main__', __name__)
 def index():
     return render_template('index.html', data="")
 
-@main.route("/login", methods=['GET', 'POST'])
-def login():
-    form = LoginModel()
+# @main.route("/login", methods=['GET', 'POST'])
+# def login():
+#     form = LoginModel()
 
-    if form.validate_on_submit():
-        return "Successfully Logged In!"
+#     if form.validate_on_submit():
+#         return "Successfully Logged In!"
 
     return render_template('login.html', form=form)
 
@@ -22,12 +23,22 @@ def register():
     form = RegistrationModel()
 
     if form.validate_on_submit():
-        flash("Registration Successful!")
+        flash(f"{form.data['preffered_genres']}")
         return render_template('index.html', data=form.data)
     else:
         for field, errors in form.errors.items():
             for error in errors:
-                flash(f"Registration Failed: {error}")
+                flash(f"{field}: {error}")
 
     return render_template('register.html', form=form)
+
+def process_recommendation(preffered_genre):
+    data = {
+        'Title': ['A Game of Thrones', 'Lucifer', 'Rain in España', 'Outlander', 'Replay'],
+        'Genre': ['Fantasy', 'Fiction', 'Romance', 'Historical', 'Fiction']
+    }
+
+    df = pd.DataFrame(data)
+    recommended_books = df[df['Genre'] == preffered_genre]['Title'].tolist()
+    return recommended_books if recommended_books else ["No books found with selected genres!"]
 

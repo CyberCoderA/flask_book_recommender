@@ -12,7 +12,7 @@ class RegistrationModel(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = EmailField('Email', validators=[DataRequired(), Email()])
 
-    genres = [(1, 'Romance'), (2, 'Action'), (3, 'Adventure'), (4, 'Thriller')] 
+    genres = ['Romance', 'Action', 'Adventure', 'Thriller'] 
     preffered_genres = MultiCheckboxField('Preferred Genres', choices=genres, validators=[Length(min=1, max=3)])
     
     submit = SubmitField('Login')
