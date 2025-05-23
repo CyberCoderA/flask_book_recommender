@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash
+from flask import Blueprint, render_template, flash, redirect, url_for
 from .models.LoginModel import LoginModel
 from .models.RegistrationModel import RegistrationModel
 import pandas as pd
@@ -24,7 +24,7 @@ def register():
 
     if form.validate_on_submit():
         flash(f"Books in {form.data['preffered_genres']}: {process_recommendation(form.data['preffered_genres'])}")
-        return render_template('index.html', data=form.data)
+        return redirect(url_for('__main__.index', data=form.data))
     else:
         for field, errors in form.errors.items():
             for error in errors:
@@ -33,19 +33,13 @@ def register():
     return render_template('register.html', form=form)
 
 def process_recommendation(preffered_genre):
-    book_data = pd.read_excel(r'C:\Users\Adrian\Documents\Flask\flask_book_recommender\app\books.xlsx', sheet_name="book")
-    data = {
-        'Title': ['A Game of Thrones', 'Lucifer', 'Rain in España', 'Outlander', 'Replay'],
-        'Genre': [['Fantasy', 'Historical'], ['Fiction'], ['Romance'], ['Romance','Historical'], ['Fiction']]
-    }
-
+    book_data = pd.read_excel(r'C:\Users\Adrian\Documents\Flask\flask_book_recommender\app\models\books.xlsx', sheet_name="book")
     df = pd.DataFrame(book_data)
     recommended_books = []
     num_rows = df.shape[0]
 
     for i in range(0, num_rows):
         temp_genre = (df['Genre'].loc[i]).split(",")
-        print(temp_genre)
 
         for genre in temp_genre:
             for selected_genre in preffered_genre:
