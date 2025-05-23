@@ -33,21 +33,39 @@ def register():
     return render_template('register.html', form=form)
 
 def process_recommendation(preffered_genre):
+    book_data = pd.read_excel(r'C:\Users\Adrian\Documents\Flask\flask_book_recommender\app\books.xlsx', sheet_name="book")
     data = {
         'Title': ['A Game of Thrones', 'Lucifer', 'Rain in España', 'Outlander', 'Replay'],
-        'Genre': [['Fantasy'], ['Fiction'], ['Romance'], ['Romance','Historical'], ['Fiction']]
+        'Genre': [['Fantasy', 'Historical'], ['Fiction'], ['Romance'], ['Romance','Historical'], ['Fiction']]
     }
 
-    df = pd.DataFrame(data)
-    recommended_books = ""
+    df = pd.DataFrame(book_data)
+    recommended_books = []
     num_rows = df.shape[0]
 
     for i in range(0, num_rows):
-        for j in df['Genre'].loc[i]:
-            for genre in preffered_genre:
-                if(j == genre):
-                    recommended_books += f"{df['Title'].loc[i]} | "
+        temp_genre = (df['Genre'].loc[i]).split(",")
+        print(temp_genre)
 
+        for genre in temp_genre:
+            for selected_genre in preffered_genre:
+                if(selected_genre == genre.strip()):
+                    if(recommended_books.__contains__({df['Title'].loc[i]})):
+                        pass
+                    else:
+                        recommended_books.append({df['Title'].loc[i]})
+
+    # multi-genre books
+    # for i in range(0, num_rows):
+    #     for j in df['Genre'].loc[i]:
+    #         for genre in preffered_genre:
+    #             if(j == genre):
+    #                 if(recommended_books.__contains__({df['Title'].loc[i]})):
+    #                     pass
+    #                 else:
+    #                     recommended_books.append({df['Title'].loc[i]})
+
+    # single genre books
     # for genre in preffered_genre:
     #     recommended_books += str(df[df['Genre'] == genre]['Title'].tolist())
     
