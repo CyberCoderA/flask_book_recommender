@@ -16,10 +16,13 @@ def login():
     form = LoginModel()
 
     if form.validate_on_submit():
-        print("!!!", account_list())
-        if(form.data["password"] == "12345"):
-            flash("Login Successful!")
-            return redirect(url_for('__main__.index', data=form.data))
+        for account in account_list():
+            reject_char = str.maketrans({",": None, "'": None, "(": None, ")": None})
+            reformatted = str(retrieve_password(account[0].username)[0]).translate(reject_char)
+            
+            if(form.data["password"] == reformatted):
+                flash(f" username: {account[0].username}\n")
+                return redirect(url_for('__main__.index', data=form.data))
     else:
         for field, errors in form.errors.items():
             for error in errors:
@@ -50,11 +53,14 @@ def register():
     return render_template('register.html', form=form)
 
 def account_list():
-    accounts = db.session.execute(db.select(UserModel).order_by(UserModel.username)).scalars()
+    accounts = db.session.execute(db.select(UserModel).order_by(UserModel.username)).fetchall()
     return accounts
 
+def retrieve_password(username):
+    return db.session.execute(db.select(UserModel.password).filter(UserModel.username == username)).fetchall()
+
 def process_recommendation(preffered_genre):
-    book_data = pd.read_excel(r'app\models\books.xlsx', sheet_name="book")
+    book_data = pd.read_excel(r'\app\models\books.xlsx', sheet_name="book")
     df = pd.DataFrame(book_data)
     recommended_books = []
     num_rows = df.shape[0]
