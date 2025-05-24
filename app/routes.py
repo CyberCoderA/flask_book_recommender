@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from .models.LoginModel import LoginModel
 from .models.RegistrationModel import RegistrationModel
+from .models.UserModel import UserModel
+from app import db
 import pandas as pd
 
 main = Blueprint('__main__', __name__)
@@ -9,20 +11,35 @@ main = Blueprint('__main__', __name__)
 def index():
     return render_template('index.html', data="")
 
-# @main.route("/login", methods=['GET', 'POST'])
-# def login():
-#     form = LoginModel()
+@main.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginModel()
 
-#     if form.validate_on_submit():
-#         return "Successfully Logged In!"
+    if form.validate_on_submit():
+        print("!!!", account_list())
+        if(form.data["password"] == "12345"):
+            flash("Login Successful!")
+            return redirect(url_for('__main__.index', data=form.data))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{field}: {error}")
 
-    # return render_template('login.html', form=form)
+    return render_template('login.html', form=form)
 
 @main.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationModel()
 
     if form.validate_on_submit():
+        account = UserModel(
+            username=form.data["username"],
+            password="!2345",
+            email=form.data["email"],
+        )
+
+        db.session.add(account)
+        db.session.commit()
         flash(f"Books in {form.data['preffered_genres']}: {process_recommendation(form.data['preffered_genres'])}")
         return redirect(url_for('__main__.index', data=form.data))
     else:
@@ -31,6 +48,10 @@ def register():
                 flash(f"{field}: {error}")
 
     return render_template('register.html', form=form)
+
+def account_list():
+    accounts = db.session.execute(db.select(UserModel).order_by(UserModel.username)).scalars()
+    return accounts
 
 def process_recommendation(preffered_genre):
     book_data = pd.read_excel(r'C:\Users\Adrian\Documents\Flask\flask_book_recommender\app\models\books.xlsx', sheet_name="book")
