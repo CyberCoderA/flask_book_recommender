@@ -13,3 +13,6 @@ class UserModel(db.Model):
     
     def retrieve_password(username: str) -> str:
         return db.session.query(UserModel.password).filter_by(username=username).first()
+    
+    def account_list():
+        return db.session.query(UserModel).all()

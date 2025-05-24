@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, session
 from .models.LoginModel import LoginModel
 from .models.RegistrationModel import RegistrationModel
 from .models.UserModel import UserModel
@@ -9,7 +9,11 @@ main = Blueprint('__main__', __name__)
 
 @main.route("/")
 def index():
-    return render_template('index.html', data="")
+    if('user' in session):
+        return render_template('index.html')
+    else:
+        flash("Please login first!")
+        return redirect(url_for('__main__.login'))
 
 @main.route("/login", methods=['GET', 'POST'])
 def login():
@@ -18,8 +22,10 @@ def login():
     if form.validate_on_submit():
         if(UserModel.user_exists(form.data["username"])):
             if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
+                session['user'] = form.data
+
                 flash(f" Howdy, {form.data["username"]}")
-                return redirect(url_for('__main__.index', data=form.data))
+                return redirect(url_for('__main__.index'))
             else:
                 flash("Incorrect password")
         else:
@@ -31,6 +37,12 @@ def login():
                 flash(f"{field}: {error}")
 
     return render_template('login.html', form=form)
+
+
+@main.route("/logout")
+def logout():
+    session.pop('user', default=None)
+    return redirect(url_for('__main__.login'))
 
 @main.route("/register", methods=['GET', 'POST'])
 def register():
@@ -58,13 +70,6 @@ def format_text(s: str) -> str:
     reject_char = str.maketrans({",": None, "'": None, "(": None, ")": None})
     return str(s).translate(reject_char)
 
-def account_list():
-    accounts = db.session.execute(db.select(UserModel).order_by(UserModel.username)).fetchall()
-    return accounts
-
-# def retrieve_password(username):
-#     return db.session.execute(db.select(UserModel.password).filter(UserModel.username == username)).fetchall()
-
 def process_recommendation(preffered_genre):
     book_data = pd.read_excel(r'app\models\books.xlsx', sheet_name="book")
     df = pd.DataFrame(book_data)
@@ -82,6 +87,8 @@ def process_recommendation(preffered_genre):
                     else:
                         recommended_books.append({df['Title'].loc[i]})
 
+    return recommended_books if recommended_books else ["No books found with selected genres!"]
+
     # multi-genre books
     # for i in range(0, num_rows):
     #     for j in df['Genre'].loc[i]:
@@ -96,4 +103,3 @@ def process_recommendation(preffered_genre):
     # for genre in preffered_genre:
     #     recommended_books += str(df[df['Genre'] == genre]['Title'].tolist())
     
-    return recommended_books if recommended_books else ["No books found with selected genres!"]
