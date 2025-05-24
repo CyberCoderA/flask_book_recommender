@@ -16,13 +16,15 @@ def login():
     form = LoginModel()
 
     if form.validate_on_submit():
-        for account in account_list():
-            reject_char = str.maketrans({",": None, "'": None, "(": None, ")": None})
-            reformatted = str(retrieve_password(account[0].username)[0]).translate(reject_char)
-            
-            if(form.data["password"] == reformatted):
-                flash(f" username: {account[0].username}\n")
+        if(UserModel.user_exists(form.data["username"])):
+            if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
+                flash(f" Howdy, {form.data["username"]}")
                 return redirect(url_for('__main__.index', data=form.data))
+            else:
+                flash("Incorrect password")
+        else:
+            flash("User does not exist")
+            
     else:
         for field, errors in form.errors.items():
             for error in errors:
@@ -37,7 +39,7 @@ def register():
     if form.validate_on_submit():
         account = UserModel(
             username=form.data["username"],
-            password="!2345",
+            password=form.data["password"],
             email=form.data["email"],
         )
 
@@ -52,15 +54,19 @@ def register():
 
     return render_template('register.html', form=form)
 
+def format_text(s: str) -> str:
+    reject_char = str.maketrans({",": None, "'": None, "(": None, ")": None})
+    return str(s).translate(reject_char)
+
 def account_list():
     accounts = db.session.execute(db.select(UserModel).order_by(UserModel.username)).fetchall()
     return accounts
 
-def retrieve_password(username):
-    return db.session.execute(db.select(UserModel.password).filter(UserModel.username == username)).fetchall()
+# def retrieve_password(username):
+#     return db.session.execute(db.select(UserModel.password).filter(UserModel.username == username)).fetchall()
 
 def process_recommendation(preffered_genre):
-    book_data = pd.read_excel(r'\app\models\books.xlsx', sheet_name="book")
+    book_data = pd.read_excel(r'app\models\books.xlsx', sheet_name="book")
     df = pd.DataFrame(book_data)
     recommended_books = []
     num_rows = df.shape[0]
