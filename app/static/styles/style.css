@@ -2,20 +2,214 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+    background: #f7f3e8;
+    background-image: url('https://c4.wallpaperflare.com/wallpaper/526/8/1002/library-interior-interior-design-books-wallpaper-preview.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    max-width: 100dvw;
+    max-height: 100dvh;
+    overflow: hidden;
+}
+
+.header {
+    background: rgba(255, 255, 255, 0.92);
+    color: #6b4f27;
+    padding: 0 32px;
+    height: 72px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 1px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(191, 167, 106, 0.10);
+    border-bottom: 1.5px solid #e9ddc7;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.header .logo {
+    font-size: 24px;
+    font-weight: 900;
+    color: #8b6f3c;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.header nav {
+    display: flex;
+    gap: 24px;
+}
+
+.header nav a {
+    color: #6b4f27;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: background 0.18s, color 0.18s;
+}
+
+.header nav a:hover,
+.header nav a.active {
+    background: #f5e6c4;
+    color: #8b6f3c;
+}
 
 .flashes {
-    border-radius: 10px;
-    background-color: #1d4b88;
-    color: #fef772;
-    padding: 10px;
-    margin: 10px;
+    background: white;
+    color: #8b6f3c;
+    padding: 7px;
+    margin: 7px auto;
     width: 90%;
     display: flex;
-    justify-self: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 28px;
+    font-size: 16px;
+    border: 1px solid #d2b48c;
+    box-shadow: 0 1px 4px rgba(139, 111, 60, 0.07);
+}
+
+form {
+    display: flex;
+    background: white !important;
+    border-radius: 0 !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 18px auto;
+    padding: 20px 14px;
+    background: white;
+    box-shadow: 0 2px 12px rgba(139, 111, 60, 0.10);
+    max-width: 700px;
+    width: 90%;
+    gap: 10px;
+    border: 1px solid #e9ddc7;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+form label {
+    color: #6b4f27;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    letter-spacing: 0.3px;
+    text-align: left;
+    width: 100%;
+    margin-left: 1rem;
+    text-transform: uppercase;
+}
+
+/* Remove default numbering/bullets from select options (for browsers that show them) */
+form select {
+    width: 100%;
+    background: #fdf6e3;
+    font-size: 13px;
+}
+
+form input {
+    color: #6b4f27;
+    border: 1px solid #d2b48c;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+ol {
+    list-style: none;
+    padding-left: 0;
+    width: 100%;
+    margin-left: 1rem;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 0.15rem;
+    margin-bottom: 0.15rem;
+}
+
+li label {
+    color: #6b4f27;
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: 0.3rem;
+    letter-spacing: 0.3px;
+}
+
+li input[type="checkbox"] {
+    width: 14px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #bfa76a;
+    outline: none;
+    box-shadow: 0 0 0 1px #f5e6c4;
+}
+
+form button,
+form input[type="submit"] {
+    background: linear-gradient(135deg, #f5e6c4 60%, #e9ddc7 100%);
+    color: #6b4f27;
+    border: 2px solid #bfa76a;
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 0 #d2b48c, 0 4px 8px rgba(191, 167, 106, 0.15);
+    letter-spacing: 0.7px;
+    text-shadow: 1px 1px 0 #fffbe6, 0 1px 0 #bfa76a;
+    position: relative;
+    overflow: hidden;
+}
+
+form button::before,
+form input[type="submit"]::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background: url('https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4d6.png') no-repeat center/contain;
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+form button:hover,
+form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #fffbe6 60%, #f5e6c4 100%);
+    color: #8b6f3c;
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 3px 0 #bfa76a, 0 6px 12px rgba(191, 167, 106, 0.18);
+}
+
+br {
+    display: none;
 }
