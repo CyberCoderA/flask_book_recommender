@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Account Settings</title>
+{% endblock %}
+
+{% block body %}
+    <h1>ACCOUNT SETTINGS</h1>
+    {{ form.hidden_tag() }}
+    {{ form.username.label }}
+    {{ form.username() }}
+
+    {{ form.password.label }}
+    {{ form.password() }}
+
+    <br>
+
+    {{ form.submit() }}
+
+{% endblock %}

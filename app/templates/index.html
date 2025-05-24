@@ -4,5 +4,5 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Testing {{ session['user'] }}</h1>
+    <h1>{{ session['user'].username }}'s preffered genre' {{ UserModel.retrieve_preffered_genres(session['user'].username) }}</h1>
 {% endblock %}

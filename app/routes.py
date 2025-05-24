@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, session
 from .models.LoginModel import LoginModel
 from .models.RegistrationModel import RegistrationModel
+from .models.AccountSettingsModel import AccountSettingsModel
 from .models.UserModel import UserModel
 from app import db
 import pandas as pd
@@ -10,7 +11,18 @@ main = Blueprint('__main__', __name__)
 @main.route("/")
 def index():
     if('user' in session):
-        return render_template('index.html')
+        return render_template('index.html', UserModel=UserModel)
+    else:
+        flash("Please login first!")
+        return redirect(url_for('__main__.login'))
+    
+@main.route("/account_settings")
+def account_Settings():
+    form = AccountSettingsModel()
+
+    if('user' in session):             
+        form.username.data = session['user']['username']                                                                                                                                                                                                                                                                                                                                                                                                                          
+        return render_template('account_settings.html', form=form)
     else:
         flash("Please login first!")
         return redirect(url_for('__main__.login'))
@@ -25,7 +37,7 @@ def login():
                 session['user'] = form.data
 
                 flash(f" Howdy, {form.data["username"]}")
-                return redirect(url_for('__main__.index'))
+                return redirect(url_for('__main__.index', UserModel=UserModel))
             else:
                 flash("Incorrect password")
         else:
@@ -53,12 +65,13 @@ def register():
             username=form.data["username"],
             password=form.data["password"],
             email=form.data["email"],
+            prefferred_genres=str(form.data["preffered_genres"])
         )
 
         db.session.add(account)
         db.session.commit()
         flash(f"Books in {form.data['preffered_genres']}: {process_recommendation(form.data['preffered_genres'])}")
-        return redirect(url_for('__main__.index', data=form.data))
+        return redirect(url_for('__main__.index', UserModel=UserModel))
     else:
         for field, errors in form.errors.items():
             for error in errors:

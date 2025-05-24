@@ -9,11 +9,11 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 class RegistrationModel(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired(), Length(min=1, max=50)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=20)])
     email = EmailField('Email', validators=[DataRequired(), Email()])
 
-    genres = ['Romance', 'Dystopian', 'Humor','Adventure', 'Fantasy' 'Thriller', 'Fiction','Historical Fiction', 'Sci-Fi'] 
+    genres = ['Romance', 'Dystopian', 'Humor','Adventure', 'Fantasy', 'Thriller', 'Fiction','Historical Fiction', 'Sci-Fi'] 
     preffered_genres = MultiCheckboxField('Preferred Genres', choices=genres, validators=[Length(min=1, max=3)])
     
     submit = SubmitField('Register')
