@@ -5,4 +5,5 @@
 
 {% block body %}
     <h1>{{ session['user'].username }}'s preffered genre' {{ UserModel.retrieve_preffered_genres(session['user'].username) }}</h1>
+    <p>Recommneded books: {{ recommended_books }}</p>
 {% endblock %}

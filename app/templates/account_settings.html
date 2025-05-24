@@ -8,12 +8,16 @@
     {{ form.hidden_tag() }}
     {{ form.username.label }}
     {{ form.username() }}
-
-    {{ form.password.label }}
-    {{ form.password() }}
-
     <br>
+    {{ form.old_password.label }}
+    {{ form.old_password() }}
+    <br>
+    {{ form.new_password.label }}
+    {{ form.new_password() }}
+    <br>
+    {{ form.confirm_password.label }}
+    {{ form.confirm_password() }}
 
-    {{ form.submit() }}
+    {{ form.update() }}
 
 {% endblock %}

@@ -11,7 +11,10 @@ main = Blueprint('__main__', __name__)
 @main.route("/")
 def index():
     if('user' in session):
-        return render_template('index.html', UserModel=UserModel)
+        formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']['username'])).strip()
+        genre_list = formatted_text[:len(formatted_text)-1].split(',')
+
+        return render_template('index.html', UserModel=UserModel, recommended_books=process_recommendation(genre_list))
     else:
         flash("Please login first!")
         return redirect(url_for('__main__.login'))
@@ -22,6 +25,11 @@ def account_Settings():
 
     if('user' in session):             
         form.username.data = session['user']['username']                                                                                                                                                                                                                                                                                                                                                                                                                          
+        form.old_password.data = session['user']['password']  
+
+        if form.validate_on_submit():
+            print("Hi")
+                                                                                                                                                                                                                                                                                                                                                                                                                                
         return render_template('account_settings.html', form=form)
     else:
         flash("Please login first!")
@@ -35,9 +43,11 @@ def login():
         if(UserModel.user_exists(form.data["username"])):
             if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
                 session['user'] = form.data
+                formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']['username'])).strip()
+                genre_list = formatted_text[:len(formatted_text)-1].split(',')
 
                 flash(f" Howdy, {form.data["username"]}")
-                return redirect(url_for('__main__.index', UserModel=UserModel))
+                return redirect(url_for('__main__.index', UserModel=UserModel, recommended_books=process_recommendation(genre_list)))
             else:
                 flash("Incorrect password")
         else:
@@ -71,7 +81,7 @@ def register():
         db.session.add(account)
         db.session.commit()
         flash(f"Books in {form.data['preffered_genres']}: {process_recommendation(form.data['preffered_genres'])}")
-        return redirect(url_for('__main__.index', UserModel=UserModel))
+        return redirect(url_for('__main__.login'))
     else:
         for field, errors in form.errors.items():
             for error in errors:
@@ -81,6 +91,10 @@ def register():
 
 def format_text(s: str) -> str:
     reject_char = str.maketrans({",": None, "'": None, "(": None, ")": None})
+    return str(s).translate(reject_char)
+
+def format_text_for_list(s: str) -> str:
+    reject_char = str.maketrans({"'": None, "(": None, ")": None, '"': None, "[": None, "]": None})
     return str(s).translate(reject_char)
 
 def process_recommendation(preffered_genre):
