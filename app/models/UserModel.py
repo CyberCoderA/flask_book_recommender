@@ -37,14 +37,17 @@ class UserModel(db.Model):
         else:
             return "Delete failed, user not found."
     
-    def update_password(username, new_password):
+    def update_user(username, new_password, new_username, id):
         user = db.session.query(UserModel).filter_by(username=username).first()
 
         if(user):
             user.password = new_password
-            db.session.commit()
-
-            return "Update successful!"
+            if(UserModel.retrieve_username(id) == new_username):
+                return "Username already exists."
+            else:
+                user.username = new_username
+                db.session.commit()
+                return "Update successful!"
         else:
             return "Update failed!"
     

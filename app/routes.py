@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, session
 from .models.LoginModel import LoginModel
 from .models.RegistrationModel import RegistrationModel
 from .models.AccountSettingsModel import AccountSettingsModel
+from .models.AdminModel import AdminModel
 from .models.UserModel import UserModel
 from app import db
 import pandas as pd
@@ -22,7 +23,7 @@ def index():
 @main.route("/admin")
 def admin():
     try:
-        form = AccountSettingsModel()
+        form = AdminModel()
 
         if session['user']["isAdmin"]:
             return render_template('admin.html', form=form, account_list=UserModel.account_list())
@@ -39,6 +40,7 @@ def delete(id):
 @main.route("/account_settings", methods=['POST', 'GET'])
 def account_settings():
     form = AccountSettingsModel()
+    old_user = form.data["username"]
 
     if('user' in session):             
         form.username.data = session['user']["username"]                                                                                                                                                                                                                                                                                                                                                                                                                       
@@ -46,7 +48,7 @@ def account_settings():
 
         if form.validate_on_submit():
             if form.data["new_password"] == form.data["confirm_password"]:
-                flash(UserModel.update_password(session['user']["username"], form.data["new_password"]))
+                flash(UserModel.update_user(session['user']["username"], form.data["new_password"], old_user, session['user']['id']))
 
                 session['user']["username"] = format_text(UserModel.retrieve_username(session['user']["id"]))
                 session['user']["password"] = format_text(UserModel.retrieve_password(session['user']["username"]))
