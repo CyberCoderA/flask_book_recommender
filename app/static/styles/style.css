@@ -15,7 +15,6 @@ body {
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     max-width: 100dvw;
-    max-height: 100vh;
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -80,6 +79,17 @@ body {
     background: #f5e6c4;
     color: #8b6f3c;
     transform: scale(1.05);
+}
+
+.recommend-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f7f3e8;
+    margin: 20px auto;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 2px solid #d2b48c;
 }
 
 .flashes {
