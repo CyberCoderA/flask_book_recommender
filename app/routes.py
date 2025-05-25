@@ -28,8 +28,15 @@ def account_settings():
         form.old_password.data = session['user']["password"]
 
         if form.validate_on_submit():
-            flash(UserModel.update_password(session['user']["username"], form.data["new_password"]))
-            return redirect(url_for('__main__.index'))
+            if form.data["new_password"] == form.data["confirm_password"]:
+                flash(UserModel.update_password(session['user']["username"], form.data["new_password"]))
+
+                session['user']["username"] = format_text(UserModel.retrieve_username(session['user']["id"]))
+                session['user']["password"] = format_text(UserModel.retrieve_password(session['user']["username"]))
+
+                return redirect(url_for('__main__.account_settings'))
+            else:
+                flash("Passwords do not match!")
                                                                                                                                                                                                                                                                                                                                                                                                                                 
         return render_template('account_settings.html', form=form)
     else:
@@ -44,7 +51,11 @@ def login():
         if(UserModel.user_exists(form.data["username"])):
             if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
                 user = UserModel.retrieve_user(form.data["username"])
-                session['user'] = form.data
+                session['user'] = {
+                    "id": format_text(UserModel.retrieve_user_id(form.data["username"])),
+                    "username": form.data["username"],
+                    "password": form.data["password"]
+                }
                 
                 formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']["username"])).strip()
                 genre_list = formatted_text[:len(formatted_text)-1].split(',')
