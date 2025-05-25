@@ -312,3 +312,69 @@ li input[type="checkbox"] {
 br {
     display: none;
 }
+
+.admin-table {
+    width: 80%;
+    align-self: center;
+    border-collapse: collapse;
+    margin: 24px auto;
+    background: #fdf6e3;
+    box-shadow: 0 2px 12px rgba(191, 167, 106, 0.10);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px 18px;
+    text-align: left;
+}
+
+.admin-table-header {
+    background: #f5e6c4;
+    color: #8b6f3c;
+    font-weight: 800;
+    border-bottom: 2px solid #d2b48c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-table-row:nth-child(even) {
+    background: #f7f3e8;
+}
+
+.admin-table-row:hover {
+    background: #f5e6c4;
+    transition: background 0.18s;
+}
+
+.admin-table-cell {
+    color: #6b4f27;
+    border-bottom: 1px solid #e9ddc7;
+    vertical-align: middle;
+}
+
+.delete-form {
+    display: inline;
+}
+
+.delete-button {
+    background: #e57373;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, transform 0.1s;
+    box-shadow: 0 2px 0 #d2b48c, 0 4px 8px rgba(191, 167, 106, 0.10);
+    letter-spacing: 0.5px;
+}
+
+.delete-button:hover {
+    background: #c62828;
+    color: #fffbe6;
+    transform: scale(1.05);
+}
