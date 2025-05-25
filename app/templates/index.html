@@ -11,10 +11,15 @@
         {{ session['user'].username }}'s Dashboard
     </h1>
 
-    <form action="/logout" method="post" style="display:inline;">
-        <button type="submit" class="logout-button">Logout</button>
-    </form>
+    <nav style="display: flex; gap: 10px; align-items: center;">
+        <a href="/logout" class="logout-button"
+            style="text-decoration: none; padding: 6px 12px; border: none; background: none; cursor: pointer;">Logout</a>
+        <a href="/account_settings" class="account-settings-button"
+            style="text-decoration: none; padding: 6px 12px; border: none; background: none; cursor: pointer;">Account
+            Settings</a>
+    </nav>
 </div>
+<h2>Recommended Books:</h2>
 <div class="recommended-books-container">
     {% for book in recommended_books %}
     <div class="book-card">
