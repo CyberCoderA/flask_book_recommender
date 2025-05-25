@@ -19,8 +19,22 @@ class UserModel(db.Model):
     def retrieve_password(username: str) -> str:
         return db.session.query(UserModel.password).filter_by(username=username).first()
     
-    def update_password():
-        return
+    def retrieve_user(username: str) -> str:
+        return db.session.query(UserModel).filter_by(username=username).first()
+    
+    def refresh_username(username: str) -> str:
+        return db.session.query(UserModel.username).filter_by(username=username).first()
+    
+    def update_password(username, new_password):
+        user = db.session.query(UserModel).filter_by(username=username).first()
+
+        if(user):
+            user.password = new_password
+            db.session.commit()
+
+            return "Update successful!"
+        else:
+            return "Update failed!"
     
     def account_list():
         return db.session.query(UserModel).all()

@@ -11,7 +11,7 @@ main = Blueprint('__main__', __name__)
 @main.route("/")
 def index():
     if('user' in session):
-        formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']['username'])).strip()
+        formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']["username"])).strip()
         genre_list = formatted_text[:len(formatted_text)-1].split(',')
 
         return render_template('index.html', UserModel=UserModel, recommended_books=process_recommendation(genre_list))
@@ -19,16 +19,17 @@ def index():
         flash("Please login first!")
         return redirect(url_for('__main__.login'))
     
-@main.route("/account_settings")
-def account_Settings():
+@main.route("/account_settings", methods=['POST', 'GET'])
+def account_settings():
     form = AccountSettingsModel()
 
     if('user' in session):             
-        form.username.data = session['user']['username']                                                                                                                                                                                                                                                                                                                                                                                                                          
-        form.old_password.data = session['user']['password']  
+        form.username.data = session['user']["username"]                                                                                                                                                                                                                                                                                                                                                                                                                       
+        form.old_password.data = session['user']["password"]
 
         if form.validate_on_submit():
-            print("Hi")
+            flash(UserModel.update_password(session['user']["username"], form.data["new_password"]))
+            return redirect(url_for('__main__.index'))
                                                                                                                                                                                                                                                                                                                                                                                                                                 
         return render_template('account_settings.html', form=form)
     else:
@@ -42,8 +43,10 @@ def login():
     if form.validate_on_submit():
         if(UserModel.user_exists(form.data["username"])):
             if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
+                user = UserModel.retrieve_user(form.data["username"])
                 session['user'] = form.data
-                formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']['username'])).strip()
+                
+                formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']["username"])).strip()
                 genre_list = formatted_text[:len(formatted_text)-1].split(',')
 
                 flash(f" Howdy, {form.data["username"]}")
@@ -71,17 +74,19 @@ def register():
     form = RegistrationModel()
 
     if form.validate_on_submit():
-        account = UserModel(
-            username=form.data["username"],
-            password=form.data["password"],
-            email=form.data["email"],
-            prefferred_genres=str(form.data["preffered_genres"])
-        )
+        if(UserModel.user_exists(form.data["username"])):
+            flash("Username already exists")
+        else:
+            account = UserModel(
+                username=form.data["username"],
+                password=form.data["password"],
+                email=form.data["email"],
+                prefferred_genres=str(form.data["preffered_genres"])
+            )
 
-        db.session.add(account)
-        db.session.commit()
-        flash(f"Books in {form.data['preffered_genres']}: {process_recommendation(form.data['preffered_genres'])}")
-        return redirect(url_for('__main__.login'))
+            db.session.add(account)
+            db.session.commit()
+            return redirect(url_for('__main__.login'))
     else:
         for field, errors in form.errors.items():
             for error in errors:
