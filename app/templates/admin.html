@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Admin Page</title>
+{% endblock %}
+
+{% block body %}
+    <h1>Admin Page</h1>
+    
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+        {% for account in account_list %}
+            <tr>
+                <td>{{ account.username }}</td>
+                <td>{{ account.email }}</td>
+                <td>
+                    <form action="/delete/{{ account.id }}" method="POST" style="display:inline;">
+                        {{ form.csrf_token }}
+                        {{ form.delete() }}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

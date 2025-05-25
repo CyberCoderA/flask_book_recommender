@@ -19,14 +19,23 @@ class UserModel(db.Model):
     def retrieve_password(username: str) -> str:
         return db.session.query(UserModel.password).filter_by(username=username).first()
     
-    def retrieve_user(username: str) -> str:
-        return db.session.query(UserModel).filter_by(username=username).first()
-    
     def retrieve_user_id(username: str) -> int:
         return db.session.query(UserModel.id).filter_by(username=username).first()
     
     def retrieve_username(id: str) -> str:
         return db.session.query(UserModel.username).filter_by(id=id).first()
+    
+    def retrieve_user(username: str) -> str:
+        return db.session.query(UserModel).filter_by(username=username).first()
+    
+    def delete_user(id: str) -> str:
+        user = db.session.query(UserModel).filter_by(id=id).first()
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return "User deleted successfully."
+        else:
+            return "Delete failed, user not found."
     
     def update_password(username, new_password):
         user = db.session.query(UserModel).filter_by(username=username).first()

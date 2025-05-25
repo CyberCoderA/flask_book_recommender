@@ -19,6 +19,23 @@ def index():
         flash("Please login first!")
         return redirect(url_for('__main__.login'))
     
+@main.route("/admin")
+def admin():
+    try:
+        form = AccountSettingsModel()
+
+        if session['user']["isAdmin"]:
+            return render_template('admin.html', form=form, account_list=UserModel.account_list())
+        
+    except KeyError:
+        flash("-Please login as admin first! \n-")
+        return redirect(url_for('__main__.login'))
+    
+@main.route("/delete/<id>", methods=['POST', 'GET'])
+def delete(id):
+    flash(UserModel.delete_user(id))
+    return redirect(url_for('__main__.admin'))
+    
 @main.route("/account_settings", methods=['POST', 'GET'])
 def account_settings():
     form = AccountSettingsModel()
@@ -47,33 +64,48 @@ def account_settings():
 def login():
     form = LoginModel()
 
-    if form.validate_on_submit():
-        if(UserModel.user_exists(form.data["username"])):
-            if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
-                user = UserModel.retrieve_user(form.data["username"])
-                session['user'] = {
-                    "id": format_text(UserModel.retrieve_user_id(form.data["username"])),
-                    "username": form.data["username"],
-                    "password": form.data["password"]
-                }
-                
-                formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']["username"])).strip()
-                genre_list = formatted_text[:len(formatted_text)-1].split(',')
-
-                flash(f" Howdy, {form.data["username"]}")
-                return redirect(url_for('__main__.index', UserModel=UserModel, recommended_books=process_recommendation(genre_list)))
-            else:
-                flash("Incorrect password")
-        else:
-            flash("User does not exist")
-            
+    if 'user' in session:
+        flash("Logout first!")
+        return redirect(url_for('__main__.index'))
+        
     else:
-        for field, errors in form.errors.items():
-            for error in errors:
-                flash(f"{field}: {error}")
+        if form.validate_on_submit():
+            if(UserModel.user_exists(form.data["username"])):
+                if(form.data["password"] == format_text(UserModel.retrieve_password(form.data["username"]))):
+                    user = UserModel.retrieve_user(form.data["username"])
+                    if form.data["username"] == "admin":
+                        session['user'] = {
+                            "id": format_text(UserModel.retrieve_user_id(form.data["username"])),
+                            "username": form.data["username"],
+                            "password": form.data["password"],
+                            "isAdmin": True
+                        }
+
+                        return redirect(url_for('__main__.admin'))
+                    else:
+                        session['user'] = {
+                            "id": format_text(UserModel.retrieve_user_id(form.data["username"])),
+                            "username": form.data["username"],
+                            "password": form.data["password"]
+                        }
+                        
+                        formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']["username"])).strip()
+                        genre_list = formatted_text[:len(formatted_text)-1].split(',')
+
+                        flash(f" Howdy, {form.data["username"]}")
+                        return redirect(url_for('__main__.index', UserModel=UserModel, recommended_books=process_recommendation(genre_list)))
+                    
+                else:
+                    flash("Incorrect password")
+            else:
+                flash("User does not exist")
+                
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f"{field}: {error}")
 
     return render_template('login.html', form=form)
-
 
 @main.route("/logout")
 def logout():
