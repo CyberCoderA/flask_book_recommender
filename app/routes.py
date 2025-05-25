@@ -92,7 +92,7 @@ def login():
                         formatted_text = format_text_for_list(UserModel.retrieve_preffered_genres(session['user']["username"])).strip()
                         genre_list = formatted_text[:len(formatted_text)-1].split(',')
 
-                        flash(f" Howdy, {form.data["username"]}")
+                        flash(f" Howdy, {form.data['username']}")
                         return redirect(url_for('__main__.index', UserModel=UserModel, recommended_books=process_recommendation(genre_list)))
                     
                 else:
@@ -156,11 +156,14 @@ def process_recommendation(preffered_genre):
 
         for genre in temp_genre:
             for selected_genre in preffered_genre:
-                if(selected_genre == genre.strip()):
-                    if(recommended_books.__contains__({df['Title'].loc[i]})):
-                        pass
-                    else:
-                        recommended_books.append({df['Title'].loc[i]})
+                if selected_genre.strip().lower() == genre.strip().lower():
+                    book_info = {
+                    "title": df['Title'].loc[i],
+                    "author": df['Author'].loc[i] if 'Author' in df.columns else "Unknown",
+                    "cover": df['Book Cover'].loc[i] if 'Book Cover' in df.columns else None
+                    }
+                    if book_info not in recommended_books:
+                        recommended_books.append(book_info)
 
     return recommended_books if recommended_books else ["No books found with selected genres!"]
 
