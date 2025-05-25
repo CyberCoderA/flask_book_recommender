@@ -1,9 +1,35 @@
 {% extends 'base.html' %}
 {% block head %}
-    <title>Home</title>
+<title>Home</title>
 {% endblock %}
 
 {% block body %}
-    <h1>{{ session['user'].username }}'s preffered genre' {{ UserModel.retrieve_preffered_genres(session['user'].username) }}</h1>
-    <p>Recommneded books: {{ recommended_books }}</p>
+{% set preferred_genres = UserModel.retrieve_preffered_genres(session['user'].username) %}
+<div class="header">
+    <h1>Welcome to BitBooks!</h1>
+    <h1>
+        {{ session['user'].username }}'s Dashboard
+    </h1>
+
+    <form action="/logout" method="post" style="display:inline;">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
+<h2>Recommended Books:</h2>
+<div class="recommended-books-container">
+    {% for book in recommended_books %}
+    <div class="book-card">
+        <div class="book-title">{{ book.title }}</div>
+        <div class="book-author">{{ book.author }}</div>
+        <div class="spacer"></div>
+        {% if book.cover %}
+        <img src="{{ book.cover }}" alt="{{ book.title }}" style="max-width:80px;"
+            onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'book-placeholder\'></div>');">
+        {% else %}
+        <div class="book-placeholder"></div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
