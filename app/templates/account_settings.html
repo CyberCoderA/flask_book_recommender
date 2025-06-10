@@ -1,27 +1,37 @@
 {% extends 'base.html' %}
 {% block head %}
-    <title>Account Settings</title>
+<title>Account Settings</title>
 {% endblock %}
 
 {% block body %}
-    <form action="/account_settings" method="POST">
-        <h1>User ID: {{ session['user'].id }}</h1>
-        <h1>{{ session['user'].username }}'s account settings</h1>
+<div class="header">
+    <h1>Welcome to BitBooks!</h1>
+    <h1>{{ session['user'].username }}'s Account Settings</h1>
+    <nav style="display: flex; gap: 10px; align-items: center;">
+        <a href="/logout" class="logout-button"
+            style="text-decoration: none; padding: 6px 12px; border: none; background: none; cursor: pointer;">Logout</a>
+        <a href="/" class="account-settings-button"
+            style="text-decoration: none; padding: 6px 12px; border: none; background: none; cursor: pointer;">Dashboard</a>
+    </nav>
+</div>
+<form class="form" action="/account_settings" method="POST">
+    <!-- <h1>User ID: {{ session['user'].id }}</h1> -->
+    <h2>EDIT ACCOUNT DETAILS</h2>
 
-        {{ form.hidden_tag() }}
-        {{ form.username.label }}
-        {{ form.username() }}
-        <br>
-        {{ form.old_password.label }}
-        {{ form.old_password() }}
-        <br>
-        {{ form.new_password.label }}
-        {{ form.new_password() }}
-        <br>
-        {{ form.confirm_password.label }}
-        {{ form.confirm_password() }}
+    {{ form.hidden_tag() }}
+    {{ form.username.label }}
+    {{ form.username() }}
+    <br>
+    {{ form.old_password.label }}
+    {{ form.old_password() }}
+    <br>
+    {{ form.new_password.label }}
+    {{ form.new_password() }}
+    <br>
+    {{ form.confirm_password.label }}
+    {{ form.confirm_password() }}
 
-        {{ form.update() }}
-    </form>
+    {{ form.update() }}
+</form>
 
 {% endblock %}

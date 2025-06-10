@@ -109,7 +109,7 @@ def login():
 
     return render_template('login.html', form=form)
 
-@main.route("/logout")
+@main.route("/logout", methods=['POST', 'GET'])
 def logout():
     session.pop('user', default=None)
     return redirect(url_for('__main__.login'))
