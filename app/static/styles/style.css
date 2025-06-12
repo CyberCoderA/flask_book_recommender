@@ -176,7 +176,7 @@ body {
 }
 
 .detail-book-cover {
-    width: 100%;
+    width: 280px;
     height: 400px;
     background: gray;
     margin-top: 20px;
