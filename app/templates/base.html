@@ -23,5 +23,21 @@
 
     {% block body %}{% endblock %}
 </body>
+<script>
+    const modal_container = document.getElementById('modal_container');
+    const close_details = document.getElementById('close_details');
 
+    close_details.addEventListener('click', () => {
+        modal_container.classList.remove('show')
+    })
+
+    function displayDetails(author, title, summary) {
+        console.log(summary)
+
+        modal_container.classList.add('show')
+        document.getElementById("displayTitle").innerHTML = "Title: " + title
+        document.getElementById("displayAuthor").innerHTML = "Author: " + author
+        document.getElementById("displaySummary").innerHTML = summary
+    }
+</script>
 </html>

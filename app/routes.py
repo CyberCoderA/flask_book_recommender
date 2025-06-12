@@ -162,8 +162,10 @@ def process_recommendation(preffered_genre):
                     book_info = {
                     "title": df['Title'].loc[i],
                     "author": df['Author'].loc[i] if 'Author' in df.columns else "Unknown",
-                    "cover": df['Book Cover'].loc[i] if 'Book Cover' in df.columns else None
+                    "cover": df['Book Cover'].loc[i] if 'Book Cover' in df.columns else None,
+                    "summary": df['Summary'].loc[i] if 'Summary' in df.columns else "Unknown",
                     }
+                    
                     if book_info not in recommended_books:
                         recommended_books.append(book_info)
 
