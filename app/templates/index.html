@@ -22,7 +22,7 @@
 <h2 class="recommend-title">Recommended Books:</h2>
 <div class="recommended-books-container">
     {% for book in recommended_books %}
-    <div class="book-card" onclick="displayDetails('{{book.author}}', '{{book.title}}', `{{book.summary}}`);">
+    <div class="book-card" onclick="displayDetails('{{book.author}}', '{{book.title}}', `{{book.summary}}`, '{{book.cover}}');">
         <div class="book-title">{{ book.title }}</div>
         <div class="book-author">{{ book.author }}</div>
         <div class="spacer"></div>
@@ -38,8 +38,12 @@
         <div class="modal">
             <div class="content-details">
                 <div>
-                    <h1 id="displayTitle">Title: blank</h1>
-                    <h2 id="displayAuthor">Author: blank</h2>
+                    <div>
+                        <h1 id="displayTitle">Title: blank</h1>
+                        <h2 id="displayAuthor">Author: blank</h2>
+                    </div>
+
+                    <div id="displayCover" class="detail-book-cover"></div>
                 </div>
 
                 <p class="summary-details" id="displaySummary">Blank</p>

@@ -31,13 +31,12 @@
         modal_container.classList.remove('show')
     })
 
-    function displayDetails(author, title, summary) {
-        console.log(summary)
-
+    function displayDetails(author, title, summary, cover) {
         modal_container.classList.add('show')
         document.getElementById("displayTitle").innerHTML = "Title: " + title
         document.getElementById("displayAuthor").innerHTML = "Author: " + author
         document.getElementById("displaySummary").innerHTML = summary
+        document.getElementById("displayCover").style.backgroundImage = `url(${cover})`
     }
 </script>
 </html>
